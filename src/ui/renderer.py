@@ -8,13 +8,11 @@ from .constants import (
     BLACK, GRAY, RED, YELLOW, GREEN,
     BOARD_ORIGIN, CELL_SIZE, BOARD_ROWS, BOARD_COLS,
     BUTTON_WIDTH, BUTTON_HEIGHT,
-    PLAYER1_LABEL_POSITION, PLAYER2_LABEL_POSITION,
-    PLAYER1_PIECES_POSITION, PLAYER2_PIECES_POSITION
 )
 
 class Renderer:
     """Handles rendering of the game board, pieces, and UI elements."""
-    
+
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.SysFont("Arial", 20)
@@ -57,12 +55,9 @@ class Renderer:
         Draw the pieces area for a player, adjusting text and outline if current player's turn.
         """
         label = f"Player {player.color.capitalize()}"
-        # font_to_use = self.font
-        # label_offset = 0
 
         if current_player:
             label += " (Your Turn)"
-            # label_offset = 4  # Extra space if big font
 
             # Draw a rectangle around the player's area
             highlight_rect = pygame.Rect(pieces_position[0] - 10, pieces_position[1] - 10, 320, 60)
@@ -73,10 +68,8 @@ class Renderer:
 
         # Render each available piece in a row below the label
         x_off = pieces_position[0]
-        # y_off = pieces_position[1] + label_offset
         y_off = pieces_position[1]
         for idx, piece in enumerate(player.get_available_pieces()):
-            color = RED if piece.color == "red" else YELLOW
             radius_map = {0: 20, 1: 30, 2: 40}
             radius = radius_map.get(piece.size, 20)
 

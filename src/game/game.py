@@ -77,7 +77,7 @@ class Game:
             to_row, to_col = to_pos
 
             # Verify the piece belongs to the current player
-            if (self.board.grid[from_row][from_col] is not None and 
+            if (self.board.grid[from_row][from_col] is not None and
                 self.board.grid[from_row][from_col].color == self.current_player.color):
 
                 if self.board.move_piece(from_row, from_col, to_row, to_col):

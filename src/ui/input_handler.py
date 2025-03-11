@@ -7,7 +7,7 @@ from .constants import BOARD_ORIGIN, CELL_SIZE, BOARD_ROWS, BOARD_COLS
 
 class InputHandler:
     """Handles mouse input events for the game."""
-    
+
     def __init__(self, game):
         self.game = game
         self.dragging = False

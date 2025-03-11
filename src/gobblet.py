@@ -7,9 +7,6 @@ import sys
 import os
 import pygame
 
-# Add the src directory to the Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from game.game import Game
 from ui.renderer import Renderer
 from ui.input_handler import InputHandler
@@ -18,6 +15,9 @@ from ui.constants import (
     PLAYER1_LABEL_POSITION, PLAYER2_LABEL_POSITION,
     PLAYER1_PIECES_POSITION, PLAYER2_PIECES_POSITION
 )
+
+# Add the src directory to the Python path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def main():
     """Main function to run the Gobblet Jr. game."""
@@ -56,13 +56,13 @@ def main():
 
         # Draw player areas
         renderer.draw_player_area(
-            game.players[0], 
+            game.players[0],
             PLAYER1_LABEL_POSITION,
             PLAYER1_PIECES_POSITION,
             current_player=(game.current_player_idx == 0)
         )
         renderer.draw_player_area(
-            game.players[1], 
+            game.players[1],
             PLAYER2_LABEL_POSITION,
             PLAYER2_PIECES_POSITION,
             current_player=(game.current_player_idx == 1)
