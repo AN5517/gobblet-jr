@@ -1,168 +1,99 @@
 import pygame
-from .constants import *
+from .constants import BOARD_ORIGIN, CELL_SIZE, BOARD_ROWS, BOARD_COLS
+from ..game.piece import Piece
 
 class InputHandler:
-    """Handles user input for the game."""
-    
     def __init__(self, game):
-        """
-        Initialize the input handler.
-        
-        Args:
-            game (Game): The game instance to handle input for
-        """
         self.game = game
         self.dragging = False
         self.dragged_piece = None
-        self.dragged_from = None
-        self.dragged_from_board = False
-        self.dragged_player_piece_idx = None
-    
+        self.drag_offset = (0, 0)
+        self.mouse_pos = (0, 0)
+
     def handle_event(self, event):
         """
-        Handle a pygame event.
-        
-        Args:
-            event (pygame.event.Event): The event to handle
-            
-        Returns:
-            bool: True if the event was handled
+        Handle a pygame event (mouse down/up/motion).
         """
         if event.type == pygame.MOUSEBUTTONDOWN:
-            return self._handle_mouse_down(event.pos)
+            if event.button == 1:  # Left mouse down
+                self._start_drag(event.pos)
         elif event.type == pygame.MOUSEBUTTONUP:
-            return self._handle_mouse_up(event.pos)
-        elif event.type == pygame.KEYDOWN:
-            return self._handle_key_down(event.key)
-        return False
-    
-    def _handle_mouse_down(self, pos):
-        """
-        Handle mouse button down event.
-        
-        Args:
-            pos (tuple): Mouse position (x, y)
-            
-        Returns:
-            bool: True if the event was handled
-        """
-        x, y = pos
-        
-        # Check if clicked on the board
-        if (BOARD_POSITION[0] <= x <= BOARD_POSITION[0] + BOARD_SIZE and
-            BOARD_POSITION[1] <= y <= BOARD_POSITION[1] + BOARD_SIZE):
-            
-            # Convert to board coordinates
-            col = (x - BOARD_POSITION[0]) // CELL_SIZE
-            row = (y - BOARD_POSITION[1]) // CELL_SIZE
-            
-            piece = self.game.board.grid[row][col]
-            if piece and piece.color == self.game.current_player.color:
-                self.dragging = True
-                self.dragged_piece = piece
-                self.dragged_from = (row, col)
-                self.dragged_from_board = True
-                return True
-        
-        # Check if clicked on player's pieces
-        player = self.game.current_player
-        player_pos = PLAYER1_AREA_POSITION if player.color == 'red' else PLAYER2_AREA_POSITION
-        
-        if (player_pos[0] <= x <= player_pos[0] + PLAYER_AREA_WIDTH and
-            player_pos[1] <= y <= player_pos[1] + PLAYER_AREA_HEIGHT):
-            
-            pieces = player.get_available_pieces()
-            for i, piece in enumerate(pieces):
-                piece_x = player_pos[0] + PLAYER_AREA_WIDTH // 2
-                piece_y = player_pos[1] + 80 + i * PIECE_SPACING
-                
-                # Check if clicked on this piece
-                radius = PIECE_SIZES[piece.size]
-                if ((x - piece_x) ** 2 + (y - piece_y) ** 2) <= radius ** 2:
-                    self.dragging = True
-                    self.dragged_piece = piece
-                    self.dragged_player_piece_idx = i
-                    self.dragged_from_board = False
-                    return True
-        
-        # Check if clicked on buttons
-        if (REWIND_BUTTON_POSITION[0] <= x <= REWIND_BUTTON_POSITION[0] + BUTTON_WIDTH and
-            REWIND_BUTTON_POSITION[1] <= y <= REWIND_BUTTON_POSITION[1] + BUTTON_HEIGHT):
-            self.game.rewind()
-            return True
-            
-        if (REPLAY_BUTTON_POSITION[0] <= x <= REPLAY_BUTTON_POSITION[0] + BUTTON_WIDTH and
-            REPLAY_BUTTON_POSITION[1] <= y <= REPLAY_BUTTON_POSITION[1] + BUTTON_HEIGHT):
-            # Replay functionality would be implemented here
-            return True
-            
-        return False
-    
-    def _handle_mouse_up(self, pos):
-        """
-        Handle mouse button up event.
-        
-        Args:
-            pos (tuple): Mouse position (x, y)
-            
-        Returns:
-            bool: True if the event was handled
-        """
-        if not self.dragging:
-            return False
-            
-        x, y = pos
-        self.dragging = False
-        
-        # Check if released on the board
-        if (BOARD_POSITION[0] <= x <= BOARD_POSITION[0] + BOARD_SIZE and
-            BOARD_POSITION[1] <= y <= BOARD_POSITION[1] + BOARD_SIZE):
-            
-            # Convert to board coordinates
-            col = (x - BOARD_POSITION[0]) // CELL_SIZE
-            row = (y - BOARD_POSITION[1]) // CELL_SIZE
-            
-            if self.dragged_from_board:
-                # Moving piece on the board
-                self.game.make_move(from_pos=self.dragged_from, to_pos=(row, col))
-            else:
-                # Placing new piece from player's supply
-                self.game.make_move(piece_idx=self.dragged_player_piece_idx, to_pos=(row, col))
-                
-        # Reset dragging state
-        self.dragged_piece = None
-        self.dragged_from = None
-        self.dragged_player_piece_idx = None
-        
-        return True
-    
-    def _handle_key_down(self, key):
-        """
-        Handle key down event.
-        
-        Args:
-            key (int): Key code
-            
-        Returns:
-            bool: True if the event was handled
-        """
-        # Handle arrow keys for board rotation (simplified version)
-        if key == pygame.K_LEFT or key == pygame.K_RIGHT or key == pygame.K_UP or key == pygame.K_DOWN:
-            # Board rotation would be implemented here
-            return True
-            
-        # Handle zoom keys
-        if key == pygame.K_MINUS or key == pygame.K_EQUALS:
-            # Zoom would be implemented here
-            return True
-            
-        return False
-    
+            if event.button == 1:  # Left mouse up
+                self._stop_drag(event.pos)
+        elif event.type == pygame.MOUSEMOTION:
+            if self.dragging:
+                self.mouse_pos = event.pos
+
     def get_dragging_info(self):
         """
-        Get information about the currently dragged piece.
-        
-        Returns:
-            tuple: (is_dragging, piece, mouse_pos)
+        Returns (is_dragging, piece, position) for rendering a dragged piece.
         """
-        return self.dragging, self.dragged_piece, pygame.mouse.get_pos()
+        return (self.dragging, self.dragged_piece, self.mouse_pos)
+
+    def _start_drag(self, pos):
+        """
+        Begin dragging if user clicked on a piece (in board or player's area).
+        """
+        # Check if click is on the player's available pieces first
+        for player_piece in self.game.current_player.get_available_pieces():
+            # Rough bounding for each available piece in the area
+            # We'll guess each piece is spaced 50 px in x-direction
+            idx = self.game.current_player.get_available_pieces().index(player_piece)
+            area_x = 20 + idx * 50
+            area_y = 30
+            # The player's area is offset from the constants (like (50, 400) or (450, 400))
+            # We check both players if they are current, but typically only one matches
+            # For simplicity, assume we only pick from the current player's location
+            # Hard-coded offsets:
+            base_x, base_y = (50, 400) if self.game.current_player.color == "red" else (450, 400)
+            center_x = base_x + area_x
+            center_y = base_y + area_y
+            radius_map = {0: 20, 1: 30, 2: 40}
+            radius = radius_map.get(player_piece.size, 20)
+            dist = ((pos[0] - center_x)**2 + (pos[1] - center_y)**2) ** 0.5
+            if dist <= radius:
+                self.dragging = True
+                self.dragged_piece = player_piece
+                self.drag_offset = (0, 0)
+                self.mouse_pos = pos
+                return
+
+        # Otherwise, check if click is on a piece on the board
+        row = (pos[1] - BOARD_ORIGIN[1]) // CELL_SIZE
+        col = (pos[0] - BOARD_ORIGIN[0]) // CELL_SIZE
+        if 0 <= row < BOARD_ROWS and 0 <= col < BOARD_COLS:
+            piece = self.game.board.grid[row][col]
+            if piece is not None and piece.color == self.game.current_player.color:
+                self.dragging = True
+                self.dragged_piece = piece
+                # Offset from the top-left corner of that grid cell
+                self.drag_offset = (pos[0] - (BOARD_ORIGIN[0] + col * CELL_SIZE),
+                                    pos[1] - (BOARD_ORIGIN[1] + row * CELL_SIZE))
+                self.mouse_pos = pos
+
+    def _stop_drag(self, pos):
+        """
+        End dragging, attempt to make a move if dropped in a valid spot.
+        """
+        if self.dragging and self.dragged_piece:
+            row = (pos[1] - BOARD_ORIGIN[1]) // CELL_SIZE
+            col = (pos[0] - BOARD_ORIGIN[0]) // CELL_SIZE
+            if 0 <= row < BOARD_ROWS and 0 <= col < BOARD_COLS:
+                # If piece is still in player's leftover supply
+                if self.dragged_piece in self.game.current_player.get_available_pieces():
+                    piece_idx = self.game.current_player.get_available_pieces().index(self.dragged_piece)
+                    self.game.make_move(piece_idx=piece_idx, to_pos=(row, col))
+                else:
+                    # Search the board for its current location
+                    old_row, old_col = None, None
+                    for r in range(BOARD_ROWS):
+                        for c in range(BOARD_COLS):
+                            if self.game.board.grid[r][c] == self.dragged_piece:
+                                old_row, old_col = r, c
+                                break
+                        if old_row is not None:
+                            break
+                    if old_row is not None and old_col is not None:
+                        self.game.make_move(from_pos=(old_row, old_col), to_pos=(row, col))
+        self.dragging = False
+        self.dragged_piece = None

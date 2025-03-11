@@ -1,39 +1,26 @@
-# Colors (RGB)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-YELLOW = (255, 255, 0)
-LIGHT_BROWN = (205, 170, 125)
-DARK_BROWN = (139, 69, 19)
-GRAY = (128, 128, 128)
-LIGHT_GRAY = (200, 200, 200)
-
-# Window settings
+"""
+UI constants for Gobblet Jr. game
+"""
 WINDOW_WIDTH = 800
 WINDOW_HEIGHT = 600
 TITLE = "Gobblet Jr."
 
-# Board settings
-BOARD_SIZE = 300
-BOARD_POSITION = (250, 150)
-CELL_SIZE = BOARD_SIZE // 3
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GRAY = (128, 128, 128)
+RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
+GREEN = (0, 200, 0)
 
-# Piece settings
-PIECE_SIZES = {
-    0: 25,  # Small
-    1: 40,  # Medium
-    2: 55   # Large
-}
+BOARD_ORIGIN = (100, 50)       # Top-left corner of the board
+CELL_SIZE = 100                # Each cell is 100x100
+BOARD_ROWS = 3
+BOARD_COLS = 3
 
-# Player area settings
-PLAYER_AREA_WIDTH = 150
-PLAYER_AREA_HEIGHT = BOARD_SIZE
-PLAYER1_AREA_POSITION = (50, 150)
-PLAYER2_AREA_POSITION = (600, 150)
-PIECE_SPACING = 70
+PLAYER1_AREA_POSITION = (50, 400)
+PLAYER2_AREA_POSITION = (450, 400)
 
-# Button settings
-BUTTON_WIDTH = 80
-BUTTON_HEIGHT = 40
-REWIND_BUTTON_POSITION = (300, 500)
-REPLAY_BUTTON_POSITION = (400, 500)
+# Button size and spacing
+BUTTON_WIDTH = 100
+BUTTON_HEIGHT = 30
+BUTTON_SPACING = 10

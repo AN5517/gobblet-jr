@@ -8,7 +8,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.game.game import Game
 from src.ui.renderer import Renderer
 from src.ui.input_handler import InputHandler
-from src.ui.constants import *
+from src.ui.constants import (
+    WINDOW_WIDTH, WINDOW_HEIGHT, TITLE, WHITE,
+    PLAYER1_AREA_POSITION, PLAYER2_AREA_POSITION
+)
 
 def main():
     """Main function to run the Gobblet Jr. game."""
@@ -28,7 +31,13 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                
+
+            # Check for clicks on rewind button
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if renderer.button_rewind_rect.collidepoint(event.pos):
+                    game.rewind()
+
+            # Pass event to input handler for dragging, etc.
             input_handler.handle_event(event)
         
         # Clear the screen
@@ -50,13 +59,13 @@ def main():
             current_player=(game.current_player_idx == 1)
         )
         
-        # Draw buttons
+        # Draw the Rewind button
         renderer.draw_buttons()
         
         # Draw game status
         renderer.draw_game_status(game)
         
-        # Draw dragged piece if any
+        # Draw any dragged piece
         is_dragging, piece, pos = input_handler.get_dragging_info()
         if is_dragging and piece:
             renderer.draw_dragging_piece(piece, pos)

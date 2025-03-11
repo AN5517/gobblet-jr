@@ -50,7 +50,7 @@ class Game:
             piece = available_pieces[piece_idx]
             to_row, to_col = to_pos
             
-            # print(
+            # print(    # debug statement
             #     f"Attempting a move on {self.current_player.color} player's "
             #     f"available {['Small', 'Medium', 'Large'][piece.size]} piece, "
             #     f"from {from_pos} to {to_pos}."
@@ -75,16 +75,7 @@ class Game:
             if (self.board.grid[from_row][from_col] is not None and 
                 self.board.grid[from_row][from_col].color == self.current_player.color):
                 
-                # Try to make the move  #ff0 commented out to check if it works
-                # moving_piece = self.board.grid[from_row][from_col]
-                # potentially_revealed = moving_piece.gobbled_piece
-                
                 if self.board.move_piece(from_row, from_col, to_row, to_col):
-                    # Reveal any gobbled piece  #ff0 commented out to check if it works
-                    # if potentially_revealed is not None:
-                        # self.board.grid[from_row][from_col] = potentially_revealed
-                        # moving_piece.gobbled_piece = None
-                    
                     # Check if the move exposed a winning sequence for the opponent
                     winner = self.board.check_winner()
                     if winner and winner != self.current_player.color:

@@ -1,5 +1,7 @@
 # Gobblet Jr. Game
 
+(readme to be edited for assignment)
+
 Gobblet Jr. is a strategic board game inspired by the classic game of tic-tac-toe, designed for two players. The objective is to align three pieces of your color in a row, either vertically, horizontally, or diagonally. The game features unique mechanics where players can stack pieces of different sizes, adding depth to the strategy.
 
 ## Project Structure
