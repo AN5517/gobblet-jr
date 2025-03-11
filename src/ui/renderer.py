@@ -1,3 +1,8 @@
+"""
+Renderer class to handle rendering of the game board,
+pieces, player areas, buttons, and game status.
+"""
+
 import pygame
 from .constants import (
     BLACK, GRAY, RED, YELLOW, GREEN,
@@ -8,6 +13,8 @@ from .constants import (
 )
 
 class Renderer:
+    """Handles rendering of the game board, pieces, and UI elements."""
+    
     def __init__(self, screen):
         self.screen = screen
         self.font = pygame.font.SysFont("Arial", 20)
@@ -50,33 +57,37 @@ class Renderer:
         Draw the pieces area for a player, adjusting text and outline if current player's turn.
         """
         label = f"Player {player.color.capitalize()}"
-        font_to_use = self.font
-        label_offset = 0
+        # font_to_use = self.font
+        # label_offset = 0
 
         if current_player:
             label += " (Your Turn)"
-            font_to_use = self.font_big
-            label_offset = 4  # Extra space if big font
+            # label_offset = 4  # Extra space if big font
 
             # Draw a rectangle around the player's area
             highlight_rect = pygame.Rect(pieces_position[0] - 10, pieces_position[1] - 10, 320, 60)
             pygame.draw.rect(self.screen, BLACK, highlight_rect, 2)
 
-        text_surf = font_to_use.render(label, True, BLACK)
-        self.screen.blit(text_surf, label_position)
+        text_surface = self.font.render(label, True, BLACK)
+        self.screen.blit(text_surface, label_position)
 
         # Render each available piece in a row below the label
         x_off = pieces_position[0]
-        y_off = pieces_position[1] + label_offset
+        # y_off = pieces_position[1] + label_offset
+        y_off = pieces_position[1]
         for idx, piece in enumerate(player.get_available_pieces()):
             color = RED if piece.color == "red" else YELLOW
             radius_map = {0: 20, 1: 30, 2: 40}
             radius = radius_map.get(piece.size, 20)
-            
-            circ_x = x_off + 20 + idx * 50
-            circ_y = y_off
-            pygame.draw.circle(self.screen, color, (circ_x, circ_y), radius)
-            pygame.draw.circle(self.screen, BLACK, (circ_x, circ_y), radius, 2)  # Outline
+
+            circ_centre = (x_off + 20 + idx * 50, y_off)
+            pygame.draw.circle(
+                self.screen,
+                RED if piece.color == "red" else YELLOW,
+                circ_centre,
+                radius
+            )
+            pygame.draw.circle(self.screen, BLACK, circ_centre, radius, 2)  # Outline
 
     def draw_buttons(self):
         """Draw the rewind button."""

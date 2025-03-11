@@ -1,7 +1,13 @@
+"""
+This module handles mouse input events for the game.
+"""
+
 import pygame
 from .constants import BOARD_ORIGIN, CELL_SIZE, BOARD_ROWS, BOARD_COLS
 
 class InputHandler:
+    """Handles mouse input events for the game."""
+    
     def __init__(self, game):
         self.game = game
         self.dragging = False
@@ -75,7 +81,8 @@ class InputHandler:
         # Attempt placing from supply
         if self.dragged_piece in self.game.current_player.get_available_pieces():
             if 0 <= row < BOARD_ROWS and 0 <= col < BOARD_COLS:
-                piece_idx = self.game.current_player.get_available_pieces().index(self.dragged_piece)
+                current_player = self.game.current_player
+                piece_idx = current_player.get_available_pieces().index(self.dragged_piece)
                 self.game.make_move(piece_idx=piece_idx, to_pos=(row, col))
         else:
             # Attempt moving on the board
@@ -89,7 +96,12 @@ class InputHandler:
                 if old_row is not None:
                     break
 
-            if old_row is not None and old_col is not None and 0 <= row < BOARD_ROWS and 0 <= col < BOARD_COLS:
+            if (
+                old_row is not None
+                and old_col is not None
+                and 0 <= row < BOARD_ROWS
+                and 0 <= col < BOARD_COLS
+            ):
                 self.game.make_move(from_pos=(old_row, old_col), to_pos=(row, col))
 
         self.cancel_drag()

@@ -1,8 +1,12 @@
+"""
+Player class for Gobblet Jr.
+"""
+
 from .piece import Piece, Size
 
 class Player:
     """Represents a player in Gobblet Jr."""
-    
+
     def __init__(self, color):
         """
         Args:
@@ -16,38 +20,38 @@ class Player:
             Piece(Size.SMALL, color), Piece(Size.SMALL, color)   # Small pieces
         ]
         self.board_pieces = []
-    
+
     def get_available_pieces(self):
         """
         Get pieces not yet placed on the board.
-        
+
         Returns:
             list: List of available pieces
         """
         return self.pieces[:]   # Return a copy of the list
-    
-    def _restore_available_pieces(self, pieces):
+
+    def restore_available_pieces(self, pieces):
         """
         Overwrite available pieces with pieces. Used for restoring state during rewind.
         """
         self.pieces = pieces[:] # Copy the list
-    
+
     def place_piece(self, piece_index):
         """
         Args:
             piece_index (int): Index of the piece to place
-            
+
         Returns:
             Piece: The piece being placed
         """
         piece = self.pieces.pop(piece_index)
         self.board_pieces.append(piece)
         return piece
-    
+
     def return_piece(self, piece):
         """
         Return a piece to the player's available pieces.
-        
+
         Args:
             piece (Piece): The piece to return
         """
