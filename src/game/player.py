@@ -24,7 +24,13 @@ class Player:
         Returns:
             list: List of available pieces
         """
-        return self.pieces
+        return self.pieces[:]   # Return a copy of the list
+    
+    def _restore_available_pieces(self, pieces):
+        """
+        Overwrite available pieces with pieces. Used for restoring state during rewind.
+        """
+        self.pieces = pieces[:] # Copy the list
     
     def place_piece(self, piece_index):
         """

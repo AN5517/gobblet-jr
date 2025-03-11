@@ -27,15 +27,16 @@ def main():
     
     running = True
     while running:
-        # Process events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-            # Check for clicks on rewind button
+            # Check for clicks on the rewind button
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if renderer.button_rewind_rect.collidepoint(event.pos):
-                    game.rewind()
+                    # Attempt a rewind and cancel any dragging
+                    if game.rewind():
+                        input_handler.cancel_drag()
 
             # Pass event to input handler for dragging, etc.
             input_handler.handle_event(event)
@@ -43,7 +44,7 @@ def main():
         # Clear the screen
         screen.fill(WHITE)
         
-        # Draw game elements
+        # Draw the board and pieces
         renderer.draw_board()
         renderer.draw_board_pieces(game.board)
         

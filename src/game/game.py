@@ -116,7 +116,11 @@ class Game:
             'board': [row[:] for row in self.board.grid],
             'current_player_idx': self.current_player_idx,
             'game_over': self.game_over,
-            'winner': self.winner
+            'winner': self.winner,
+            'available_pieces': {
+                'red': self.players[0].get_available_pieces(),
+                'yellow': self.players[1].get_available_pieces()
+            }
         }
     
     def _restore_state(self, state):
@@ -131,6 +135,8 @@ class Game:
         self.current_player_idx = state['current_player_idx']
         self.game_over = state['game_over']
         self.winner = state['winner']
+        self.players[0]._restore_available_pieces(state['available_pieces']['red'])
+        self.players[1]._restore_available_pieces(state['available_pieces']['yellow'])
     
     def _check_game_end(self):
         """Check if the game has ended."""

@@ -10,15 +10,15 @@ BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
-GREEN = (0, 200, 0)
+GREEN = (0, 255, 0)
 
 BOARD_ORIGIN = (100, 50)       # Top-left corner of the board
 CELL_SIZE = 100                # Each cell is 100x100
 BOARD_ROWS = 3
 BOARD_COLS = 3
 
-PLAYER1_AREA_POSITION = (50, 400)
-PLAYER2_AREA_POSITION = (450, 400)
+PLAYER1_AREA_POSITION = (50, 420)
+PLAYER2_AREA_POSITION = (450, 420)
 
 # Button size and spacing
 BUTTON_WIDTH = 100
