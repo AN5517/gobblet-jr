@@ -16,11 +16,17 @@ class InputHandler:
 
     def handle_event(self, event):
         """Handle mouse events for picking up and dropping pieces."""
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        if (
+            event.type == pygame.MOUSEBUTTONDOWN    # pylint: disable=no-member
+            and event.button == 1
+        ):
             self._start_drag(event.pos)
-        elif event.type == pygame.MOUSEBUTTONUP and event.button == 1:
+        elif (
+            event.type == pygame.MOUSEBUTTONUP  # pylint: disable=no-member
+            and event.button == 1
+        ):
             self._stop_drag(event.pos)
-        elif event.type == pygame.MOUSEMOTION:
+        elif event.type == pygame.MOUSEMOTION:  # pylint: disable=no-member
             if self.dragging:
                 self.mouse_pos = event.pos
 

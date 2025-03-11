@@ -21,7 +21,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def main():
     """Main function to run the Gobblet Jr. game."""
-    pygame.init()
+    pygame.init()   # pylint: disable=no-member
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption(TITLE)
     clock = pygame.time.Clock()
@@ -34,11 +34,14 @@ def main():
     running = True
     while running:
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:   # pylint: disable=no-member
                 running = False
 
             # Check for clicks on the rewind button
-            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            if (
+                event.type == pygame.MOUSEBUTTONDOWN    # pylint: disable=no-member
+                and event.button == 1
+            ):
                 if renderer.button_rewind_rect.collidepoint(event.pos):
                     # Attempt a rewind and cancel any dragging
                     if game.rewind():
@@ -83,7 +86,7 @@ def main():
         pygame.display.flip()
         clock.tick(60)
 
-    pygame.quit()
+    pygame.quit()   # pylint: disable=no-member
     sys.exit()
 
 if __name__ == "__main__":
