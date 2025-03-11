@@ -10,7 +10,8 @@ from src.ui.renderer import Renderer
 from src.ui.input_handler import InputHandler
 from src.ui.constants import (
     WINDOW_WIDTH, WINDOW_HEIGHT, TITLE, WHITE,
-    PLAYER1_AREA_POSITION, PLAYER2_AREA_POSITION
+    PLAYER1_LABEL_POSITION, PLAYER2_LABEL_POSITION,
+    PLAYER1_PIECES_POSITION, PLAYER2_PIECES_POSITION
 )
 
 def main():
@@ -51,12 +52,14 @@ def main():
         # Draw player areas
         renderer.draw_player_area(
             game.players[0], 
-            PLAYER1_AREA_POSITION, 
+            PLAYER1_LABEL_POSITION,
+            PLAYER1_PIECES_POSITION,
             current_player=(game.current_player_idx == 0)
         )
         renderer.draw_player_area(
             game.players[1], 
-            PLAYER2_AREA_POSITION, 
+            PLAYER2_LABEL_POSITION,
+            PLAYER2_PIECES_POSITION,
             current_player=(game.current_player_idx == 1)
         )
         

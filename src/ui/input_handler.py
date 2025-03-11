@@ -38,12 +38,12 @@ class InputHandler:
             # Estimate rough bounding circle for each piece
             # Player area positions come from the renderer's known layout
             if current_player.color == 'red':
-                base_x, base_y = (50, 420)
+                base_x, base_y = (50, 440)
             else:
-                base_x, base_y = (450, 420)
+                base_x, base_y = (450, 440)
 
             piece_x = base_x + 20 + idx * 50
-            piece_y = base_y + 40  # slight offset from label
+            piece_y = base_y
             radius_map = {0: 20, 1: 30, 2: 40}
             radius = radius_map.get(piece.size, 20)
             dist = ((pos[0] - piece_x)**2 + (pos[1] - piece_y)**2)**0.5

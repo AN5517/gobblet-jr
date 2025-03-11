@@ -2,7 +2,9 @@ import pygame
 from .constants import (
     BLACK, GRAY, RED, YELLOW, GREEN,
     BOARD_ORIGIN, CELL_SIZE, BOARD_ROWS, BOARD_COLS,
-    BUTTON_WIDTH, BUTTON_HEIGHT
+    BUTTON_WIDTH, BUTTON_HEIGHT,
+    PLAYER1_LABEL_POSITION, PLAYER2_LABEL_POSITION,
+    PLAYER1_PIECES_POSITION, PLAYER2_PIECES_POSITION
 )
 
 class Renderer:
@@ -43,7 +45,7 @@ class Renderer:
         pygame.draw.circle(self.screen, color, (center_x, center_y), radius)
         pygame.draw.circle(self.screen, BLACK, (center_x, center_y), radius, 2)  # Outline
 
-    def draw_player_area(self, player, position, current_player=False):
+    def draw_player_area(self, player, label_position, pieces_position, current_player=False):
         """
         Draw the pieces area for a player, adjusting text and outline if current player's turn.
         """
@@ -57,15 +59,15 @@ class Renderer:
             label_offset = 4  # Extra space if big font
 
             # Draw a rectangle around the player's area
-            highlight_rect = pygame.Rect(position[0] - 10, position[1] - 10, 300, 100)
+            highlight_rect = pygame.Rect(pieces_position[0] - 10, pieces_position[1] - 10, 320, 60)
             pygame.draw.rect(self.screen, BLACK, highlight_rect, 2)
 
         text_surf = font_to_use.render(label, True, BLACK)
-        self.screen.blit(text_surf, position)
+        self.screen.blit(text_surf, label_position)
 
         # Render each available piece in a row below the label
-        x_off = position[0]
-        y_off = position[1] + 40 + label_offset
+        x_off = pieces_position[0]
+        y_off = pieces_position[1] + label_offset
         for idx, piece in enumerate(player.get_available_pieces()):
             color = RED if piece.color == "red" else YELLOW
             radius_map = {0: 20, 1: 30, 2: 40}
